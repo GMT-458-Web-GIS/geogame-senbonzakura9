@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Time Traveler GeoGame</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <!-- Our CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Time Traveler GeoGame</h1>
+
+  <div class="game-container">
+    <div class="top-section">
+      <div id="map"></div>
+
+      <div class="sidebar">
+
+        <!-- Current Event panel -->
+        <div class="panel" id="eventPanel">
+          <div class="panel-title">Current Event</div>
+          <div id="eventName">Loading events…</div>
+        </div>
+
+        <!-- Game Stats panel -->
+        <div class="panel">
+          <div class="panel-title">Game Stats</div>
+          <div class="stat-row">
+            <span>Timer:</span>
+            <span id="timer">60s</span>
+          </div>
+          <div class="stat-row">
+            <span>Score:</span>
+            <span id="score">0</span>
+          </div>
+          <div class="stat-row">
+            <span>Lives:</span>
+            <span id="lives" class="lives">❤️❤️❤️</span>
+          </div>
+
+          <div class="difficulty">
+            <span>Difficulty:</span>
+            <span id="difficulty" class="badge difficulty-level">-</span>
+          </div>
+        </div>
+
+        <!-- Controls panel -->
+        <div class="panel">
+          <div class="panel-title">Controls</div>
+          <div class="buttons">
+            <button id="startBtn" disabled>Start</button>
+            <button id="restartBtn" disabled>Play Again</button>
+          </div>
+        </div>
+
+        <!-- Scoring Rules panel -->
+        <div class="panel">
+          <div class="panel-title">Scoring Rules</div>
+
+          <div class="stat-row">
+            <small>0 - 300 km:</small>
+            <span style="color:#10b981; font-weight:bold;">+50 pts</span>
+          </div>
+          <div class="stat-row">
+            <small>300 - 1000 km:</small>
+            <span style="color:#10b981;">+25 pts</span>
+          </div>
+          <div class="stat-row">
+            <small>1000 - 2000 km:</small>
+            <span style="color:#059669;">+10 pts</span>
+          </div>
+          <div class="stat-row">
+            <small>2000 - 3000 km:</small>
+            <span style="color:#047857;">+5 pts</span>
+          </div>
+          <div class="stat-row">
+            <small>&gt; 3000 km:</small>
+            <span style="color:#ef4444; font-weight:bold;">-1 Life</span>
+          </div>
+        </div>
+
+        <!-- Feedback Panel (YENİ KONUM) -->
+        <div class="panel">
+          <div class="panel-title">Feedback</div>
+          <div id="feedback">Events are loading…</div>
+        </div>
+
+      </div> <!-- sidebar -->
+    </div> <!-- top-section -->
+
+    <!-- Alt boş bölge tamamen kaldırıldı -->
+
+  </div> <!-- game-container -->
+  <!-- GAME OVER POPUP -->
+  <div id="gameOverPopup" class="popup hidden">
+    <div class="popup-box">
+      <h2 id="popupTitle">Game Over</h2>
+      <p id="popupMessage">Your time is up!</p>
+      <button id="popupCloseBtn">OK</button>
+    </div>
+  </div>
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Our JS -->
+  <script src="script.js"></script>
+
+</body>
+</html>
