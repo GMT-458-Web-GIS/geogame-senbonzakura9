@@ -1,136 +1,171 @@
+/* GLOBAL RESET */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
 }
 
 body {
-  background: #f3f4f6;
+  font-family: "Inter", system-ui, sans-serif;
+  background: #e5e7eb;
   color: #111827;
+  overflow-x: hidden;
 }
 
-h1 {
+/* ---- MODERN TITLE ---- */
+.modern-title {
+  width: 100%;
   text-align: center;
-  padding: 8px 0;
-  font-size: 1.4rem;
+  padding: 22px 0 10px;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  background: linear-gradient(90deg, #0ea5e9, #3b82f6, #6366f1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.game-container {
+/* ---- FLOATING POINTS ---- */
+#pointsFloat {
+  position: fixed;
+  top: 40%;
+  left: 35%;
+  transform: translate(-50%, -50%);
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: #22c55e;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 9999;
+}
+
+#pointsFloat.show {
+  animation: pointsPop 2.5s ease-out;
+}
+
+@keyframes pointsPop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6);
+  }
+  40% {
+    opacity: 1;
+    transform: translate(-50%, -60%) scale(1.05);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -80%) scale(1);
+  }
+}
+
+/* ---- LAYOUT ---- */
+.layout {
   display: flex;
-  flex-direction: column;
-  height: calc(100vh - 50px);
-  padding: 8px;
-  gap: 8px;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 0px 30px;
+  height: calc(100vh - 110px);
 }
 
-.top-section {
-  flex: 1;
-  display: flex;
-  gap: 8px;
-  min-height: 0;
-}
-
+/* ---- MAP FULL HEIGHT/LEFT ---- */
 #map {
   flex: 3;
-  min-width: 0;
-  border-radius: 8px;
+  height: 100%;
+  border-radius: 20px;
   border: 1px solid #d1d5db;
-  outline: none;           /* focus outline (siyah çerçeve) yok */
+  overflow: hidden;
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.22);
 }
 
-#map:focus {
-  outline: none;           /* ekstra garanti */
+
+.map-flash {
+  animation: mapFlash 0.8s ease-in-out infinite;
+}
+@keyframes mapFlash {
+  0% {
+    box-shadow: 0 20px 45px rgba(15, 23, 42, 0.22);
+    border-color: #d1d5db;
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.7);
+    border-color: #ef4444;
+  }
+  100% {
+    box-shadow: 0 20px 45px rgba(15, 23, 42, 0.22);
+    border-color: #d1d5db;
+  }
 }
 
+/* ---- SIDEBAR ---- */
 .sidebar {
-  flex: 1;
+  flex: 1.1;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  min-width: 220px;
+  gap: 14px;
 }
 
+/* panel */
 .panel {
-  background: #ffffff;
-  border-radius: 8px;
-  padding: 10px;
+  background: white;
+  border-radius: 16px;
+  padding: 14px 18px;
   border: 1px solid #e5e7eb;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-  font-size: 0.9rem;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
 }
 
 .panel-title {
+  font-size: 1.1rem;
   font-weight: 600;
-  margin-bottom: 6px;
-  font-size: 1.05rem;      /* başlık biraz büyüdü */
+  margin-bottom: 8px;
 }
 
-/* Sadece Current Event yazısı için */
-#eventPanel #eventName {
-  margin-top: 4px;
-  font-size: 1rem;
-  font-weight: 600;
-}
-
+/* stats */
 .stat-row {
   display: flex;
   justify-content: space-between;
-  margin-top: 4px;
-}
-
-.difficulty {
-  display: inline-flex;
-  gap: 4px;
   margin-top: 6px;
-  font-size: 0.8rem;
-  align-items: center;
+  font-size: 0.9rem;
 }
 
+/* difficulty badge */
 .badge {
   padding: 2px 6px;
-  border-radius: 999px;
+  border-radius: 10px;
   font-size: 0.75rem;
   border: 1px solid #e5e7eb;
-  background: #f9fafb;
 }
 
 .difficulty-level {
   font-weight: 600;
 }
 
+/* buttons */
 .buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  margin-bottom: 8px;
 }
 
 button {
   cursor: pointer;
-  padding: 8px 10px;
-  border-radius: 999px;
-  border: none;
-  font-size: 0.9rem;
-  font-weight: 600;
-  transition: transform 0.05s ease, box-shadow 0.05s ease, background 0.1s ease;
-}
-
-button:active {
-  transform: translateY(1px);
-  box-shadow: none;
-}
-
-#startBtn {
+  width: 100%;
   background: #10b981;
   color: white;
-  box-shadow: 0 1px 3px rgba(16, 185, 129, 0.4);
+  padding: 10px;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  transition: transform 0.05s ease, box-shadow 0.1s ease, background 0.15s ease;
 }
 
-#restartBtn {
-  background: #3b82f6;
-  color: white;
-  box-shadow: 0 1px 3px rgba(59, 130, 246, 0.4);
+button:hover:not(:disabled) {
+  background: #059669;
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: none;
 }
 
 button:disabled {
@@ -139,35 +174,69 @@ button:disabled {
   cursor: default;
 }
 
-.bottom-section {
-  min-height: 50px;
+/* Power-ups */
+.powerups-title {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-bottom: 6px;
 }
 
+.powerups {
+  display: flex;
+  gap: 8px;
+}
+
+.powerup-btn {
+  width: 50%;
+  font-size: 0.8rem;
+  padding: 8px;
+  background: #6366f1;
+}
+
+.powerup-btn:hover:not(:disabled) {
+  background: #4f46e5;
+}
+
+/* feedback */
 #feedback {
   font-size: 0.9rem;
   color: #111827;
 }
 
-#feedback small {
-  color: #6b7280;
-}
-
+/* lives */
 .lives {
   color: #ef4444;
 }
 
-/* Ülke label’ları için küçük, sade yazı */
+/* tooltip */
 .country-label {
-  font-size: 0.65rem;
-  color: #374151;
-  background: transparent;
-  border: none;
-  text-shadow: 0 0 2px #f9fafb;
+  font-size: 0.8rem;
+  background: rgba(15, 23, 42, 0.85);
+  color: #fff !important;
+  padding: 2px 6px;
+  border-radius: 4px;
+  pointer-events: none;
 }
 
-@media (max-width: 768px) {
-  .top-section {
+
+.leaflet-zoom-box {
+  display: none !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+
+path.leaflet-interactive:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 900px) {
+  .layout {
     flex-direction: column;
+    height: auto;
+    padding: 0 10px 20px;
   }
 
   #map {
@@ -175,47 +244,37 @@ button:disabled {
   }
 
   .sidebar {
-    min-width: 0;
     flex-direction: row;
     flex-wrap: wrap;
   }
 
   .panel {
-    flex: 1;
+    flex: 1 1 260px;
   }
 
-  .buttons {
-    flex-direction: row;
+  .powerups {
+    flex-wrap: wrap;
+  }
+
+  .powerup-btn {
+    width: 100%;
   }
 }
-/* Leaflet'in çizdiği siyah seçim kutusunu tamamen gizle */
-.leaflet-zoom-box {
-  display: none !important;
-  border: none !important;
-  background: transparent !important;
-}
-/* Leaflet içindeki tıklanabilir alanların (ülkeler, şekiller)
-   etrafında çıkan siyah focus çerçevesini (outline) kaldırır */
-path.leaflet-interactive:focus {
-  outline: none !important;
-}
-/* -------- GAME OVER POPUP -------- */
+
+/* ---------- GAME OVER POPUP ---------- */
+
 .popup {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background: rgba(0,0,0,0.45);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  z-index: 999999;
 }
 
-.popup.hidden {
-  display: none;
-}
+.popup.hidden { display: none; }
 
 .popup-box {
   background: white;
@@ -229,7 +288,7 @@ path.leaflet-interactive:focus {
 
 @keyframes popupScale {
   from { transform: scale(0.7); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  to   { transform: scale(1); opacity: 1; }
 }
 
 #popupCloseBtn {
@@ -242,13 +301,64 @@ path.leaflet-interactive:focus {
   font-size: 1rem;
   cursor: pointer;
 }
-/* Popup'ın tüm Leaflet panellerinin üstüne çıkmasını garanti et */
-.leaflet-pane,
-.leaflet-top,
-.leaflet-bottom {
-  z-index: 1 !important;
+
+/* ---------- ANIMATIONS (event, score, lives, timer) ---------- */
+
+
+.event-animate {
+  animation: eventFade 0.35s ease-out;
+}
+@keyframes eventFade {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.popup {
-  z-index: 999999 !important;
+
+.score-pulse {
+  animation: scorePulse 0.3s ease-out;
 }
+@keyframes scorePulse {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+
+.lives-hit {
+  animation: livesHit 0.3s ease-in-out;
+}
+@keyframes livesHit {
+  0%   { transform: translateX(0); }
+  25%  { transform: translateX(-2px); }
+  50%  { transform: translateX(2px); }
+  75%  { transform: translateX(-2px); }
+  100% { transform: translateX(0); }
+}
+
+/* Timer low (text) */
+.timer-low {
+  animation: timerBlink 0.7s ease-in-out infinite;
+  color: #ef4444 !important;
+}
+@keyframes timerBlink {
+  0%   { opacity: 1;   transform: scale(1); }
+  50%  { opacity: 0.4; transform: scale(1.05); }
+  100% { opacity: 1;   transform: scale(1); }
+}/* Floating Timer on Map */
+#map {
+  position: relative; 
+}
+
+#mapTimer {
+  position: absolute;
+  top: 30px;
+  right: 600px;
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+  padding: 8px 14px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  border-radius: 10px;
+  z-index: 99999;
+}
+

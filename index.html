@@ -15,88 +15,108 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Time Traveler GeoGame</h1>
 
-  <div class="game-container">
-    <div class="top-section">
-      <div id="map"></div>
+  <!-- Modern Title -->
+  <h1 class="modern-title">Time Traveler GeoGame</h1>
 
-      <div class="sidebar">
+  <!-- Floating points (+50 etc.) -->
+  <div id="pointsFloat">+50</div>
 
-        <!-- Current Event panel -->
-        <div class="panel" id="eventPanel">
-          <div class="panel-title">Current Event</div>
-          <div id="eventName">Loading events…</div>
+  <!-- PAGE LAYOUT: MAP LEFT + SIDEBAR RIGHT -->
+  <div class="layout">
+
+    <!-- LEFT: MAP -->
+    <div id="map"></div>
+    <div id="mapTimer">90s</div>
+
+    <!-- RIGHT: SIDEBAR -->
+    <div class="sidebar">
+
+      <!-- Current Event -->
+      <div class="panel" id="eventPanel">
+        <div class="panel-title">Current Event</div>
+        <div id="eventName">Press Start to play</div>
+      </div>
+
+      <!-- Game Stats -->
+      <div class="panel">
+        <div class="panel-title">Game Stats</div>
+
+        <div class="stat-row">
+          <span>Timer:</span>
+          <span id="timer">90s</span>
         </div>
 
-        <!-- Game Stats panel -->
-        <div class="panel">
-          <div class="panel-title">Game Stats</div>
-          <div class="stat-row">
-            <span>Timer:</span>
-            <span id="timer">60s</span>
-          </div>
-          <div class="stat-row">
-            <span>Score:</span>
-            <span id="score">0</span>
-          </div>
-          <div class="stat-row">
-            <span>Lives:</span>
-            <span id="lives" class="lives">❤️❤️❤️</span>
-          </div>
-
-          <div class="difficulty">
-            <span>Difficulty:</span>
-            <span id="difficulty" class="badge difficulty-level">-</span>
-          </div>
+        <div class="stat-row">
+          <span>Score:</span>
+          <span id="score">0</span>
         </div>
 
-        <!-- Controls panel -->
-        <div class="panel">
-          <div class="panel-title">Controls</div>
-          <div class="buttons">
-            <button id="startBtn" disabled>Start</button>
-          </div>
+        <div class="stat-row">
+          <span>Lives:</span>
+          <span id="lives" class="lives">❤️❤️❤️</span>
         </div>
 
-        <!-- Scoring Rules panel -->
-        <div class="panel">
-          <div class="panel-title">Scoring Rules</div>
+        <div class="stat-row">
+          <span>Difficulty:</span>
+          <span id="difficulty" class="badge difficulty-level">-</span>
+        </div>
+      </div>
 
-          <div class="stat-row">
-            <small>0 - 300 km:</small>
-            <span style="color:#10b981; font-weight:bold;">+50 pts</span>
-          </div>
-          <div class="stat-row">
-            <small>300 - 1000 km:</small>
-            <span style="color:#10b981;">+25 pts</span>
-          </div>
-          <div class="stat-row">
-            <small>1000 - 2000 km:</small>
-            <span style="color:#059669;">+10 pts</span>
-          </div>
-          <div class="stat-row">
-            <small>2000 - 3000 km:</small>
-            <span style="color:#047857;">+5 pts</span>
-          </div>
-          <div class="stat-row">
-            <small>&gt; 3000 km:</small>
-            <span style="color:#ef4444; font-weight:bold;">-1 Life</span>
-          </div>
+      <!-- Controls + Power-ups -->
+      <div class="panel">
+        <div class="panel-title">Controls</div>
+        <div class="buttons">
+          <button id="startBtn">Start</button>
         </div>
 
-        <!-- Feedback Panel (YENİ KONUM) -->
-        <div class="panel">
-          <div class="panel-title">Feedback</div>
-          <div id="feedback">Events are loading…</div>
+        <div class="powerups-title">Power-ups (1 use per game)</div>
+        <div class="powerups">
+          <button id="skipBtn" class="powerup-btn" disabled>Skip Event</button>
+          <button id="timeBoostBtn" class="powerup-btn" disabled>+10s Time</button>
+        </div>
+      </div>
+
+      <!-- Scoring Rules -->
+      <div class="panel">
+        <div class="panel-title">Scoring Rules</div>
+
+        <div class="stat-row">
+          <small>0 - 300 km:</small>
+          <span style="color:#10b981; font-weight:bold;">+50 pts</span>
         </div>
 
-      </div> <!-- sidebar -->
-    </div> <!-- top-section -->
+        <div class="stat-row">
+          <small>300 - 500 km:</small>
+          <span style="color:#10b981; font-weight:bold;">+40 pts</span>
+        </div>
 
-    <!-- Alt boş bölge tamamen kaldırıldı -->
+        <div class="stat-row">
+          <small>500 - 1500 km:</small>
+          <span style="color:#059669;">+20 pts</span>
+        </div>
 
-  </div> <!-- game-container -->
+        <div class="stat-row">
+          <small>1500 - 2000 km:</small>
+          <span style="color:#047857;">+5 pts</span>
+        </div>
+
+        <div class="stat-row">
+          <small>&gt; 2000 km:</small>
+          <span style="color:#ef4444; font-weight:bold;">-1 Life</span>
+        </div>
+      </div>
+
+      <!-- Feedback -->
+      <div class="panel">
+        <div class="panel-title">Feedback</div>
+        <div id="feedback">Ready to travel in time!</div>
+      </div>
+
+    </div> <!-- end sidebar -->
+  </div> <!-- end layout -->
+
+
   <!-- GAME OVER POPUP -->
   <div id="gameOverPopup" class="popup hidden">
     <div class="popup-box">
@@ -105,6 +125,7 @@
       <button id="popupCloseBtn">OK</button>
     </div>
   </div>
+
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
