@@ -1,0 +1,87 @@
+Overview
+Time Traveler GeoGame is an interactive, time-limited geography quiz where players are shown a historical event and must click its correct location on a world map.
+Your goal is to score as many points as possible before time runs out — and avoid losing all your lives!
+This project was developed as a web-based mini-game using modern JavaScript, Leaflet maps, and custom audio/visual effects.
+🎮 Gameplay
+A random historical event appears on the screen.
+The player clicks on the map to guess its location.
+The game calculates the distance between the guessed point and the actual event coordinates.
+Points are awarded based on accuracy:
+0–300 km → +50 points
+300–500 km → +40 points
+500–1500 km → +20 points
+1500–2000 km → +5 points
+2000+ km → Lose 1 life
+Additional Mechanics:
+Every correct guess adds +2 bonus seconds.
+Players have 3 lives.
+The game ends when Time runs out OR all lives are lost
+Power-ups:
+Skip event → once per game
++10 seconds → once per game
+A floating “+50 / +40 / +20 / +5” animation appears after each guess.
+Smooth zoom-in animation shows the true location after each round.
+⏳ Game Modes
+When starting the game, the player chooses:
+60 seconds
+90 seconds
+A visible map-side timer tracks the remaining time.
+During the last 10 seconds, the map frame flashes red and a “last 10 seconds” warning sound plays.
+🌍 Map Integration
+The game uses Leaflet.js with a light world tile layer.
+Features:
+Hovering a country highlights it
+Country names appear near the cursor
+Clicking anywhere registers a guess
+Smooth map fly animations
+No infinite world wrap — fixed map boundaries
+Custom styling and rounded card-style map container
+🔊 Audio System
+The game includes a full custom audio engine:
+Background Music
+think.mp3 plays in a loop during gameplay
+Automatically stops at the last 10 seconds
+Last 10 Seconds Warning
+last10.mp3 loops during the final 10 seconds
+Sound Effects:
+Correct answer
+Wrong answer
+Power-up activation
+Button click
+Game over
+Floating scoreboard animation
+Volume Control (UI) is Located top-right of the screen
+Includes:
+🔊 Mute/unmute toggle
+Hidden volume slider appears on hover
+Controls all game sounds (effects + music)
+ Technologies Used:
+JavaScript Libraries:
+Library	Purpose
+Leaflet.js	World map rendering, markers, events, country polygons
+World GeoJSON	Country shapes + hover highlights
+Custom JS Engine	Game logic, animations, distance scoring
+HTML5 Audio API	All sound effects & background music
+🧩 Features Summary
+Random historical events
+Interactive world map
+Smooth zoom animations
+Point system based on accuracy
+Floating score animation
+Remaining lives indicator
+60s/90s selectable game modes
+Power-ups (skip + +10s)
+Background & warning music
+Sound effects
+Mute + volume control
+End-of-game statistics:
+Final Score
+Total Questions
+Average Distance
+Accuracy Percentage
+🚀 How to Play
+Click Start
+Choose 60s or 90s mode
+Read the event
+Click on the map
+Try to get the best score!
