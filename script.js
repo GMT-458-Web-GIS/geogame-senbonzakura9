@@ -1,19 +1,50 @@
+// ====================== AUDIO SYSTEM ======================
+
+// Efekt sesleri
 const gameSounds = {
   correct: new Audio("correct.mp3"),
   wrong: new Audio("wrong.mp3"),
   gameOver: new Audio("gameover.mp3"),
-  powerup: new Audio("powerup.mp3")
+  powerup: new Audio("powerup.mp3"),
+  click: new Audio("click.mp3")
 };
 
+// Arkaplan müzikleri
+const bgm = new Audio("think.mp3");
+bgm.loop = true;
+bgm.preload = "auto";
+
+const last10Sound = new Audio("last10.mp3");
+last10Sound.loop = true;
+last10Sound.preload = "auto";
+
+// Global ses durumu
+let masterVolume = 0.6; // 0–1
+let isMuted = false;
+
+function applyVolumeToAll() {
+  // Efekt sesleri
+  Object.values(gameSounds).forEach(a => {
+    if (!a) return;
+    a.volume = isMuted ? 0 : masterVolume;
+  });
+
+  // BGM ve last10
+  bgm.volume = isMuted ? 0 : 0.45 * masterVolume;
+  last10Sound.volume = isMuted ? 0 : 0.6 * masterVolume;
+}
+
+// Genel efekt çalma fonksiyonu
 function playSound(type) {
   const s = gameSounds[type];
   if (!s) return;
+  if (isMuted || masterVolume <= 0) return;
+
   s.currentTime = 0;
-  s.volume = 0.45;
   s.play().catch(() => {});
 }
 
-// ======== MAP INITIALIZATION ========
+// ====================== MAP INITIALIZATION ======================
 
 const map = L.map("map", {
   worldCopyJump: true,
@@ -60,12 +91,12 @@ function clearMarkers() {
   if (lineLayer) { map.removeLayer(lineLayer); lineLayer = null; }
 }
 
-// ======== COUNTRIES GEOJSON ========
+// ====================== COUNTRIES GEOJSON ======================
 
 const countriesUrl =
   "https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json";
 
-function countryStyle(feature) {
+function countryStyle() {
   return {
     color: "#9ca3af",
     weight: 0.7,
@@ -123,7 +154,7 @@ fetch(countriesUrl)
   })
   .catch(err => console.error("GeoJSON load error:", err));
 
-// ======== EVENTS DATA ========
+// ====================== EVENTS DATA ======================
 
 const eventsData = [
   { name: "Construction of the Pyramids (Giza)", difficulty: "Easy", lat: 29.9792, lon: 31.1342, year: "c. 2500 BC" },
@@ -136,8 +167,11 @@ const eventsData = [
   { name: "Taj Mahal Completed (Agra)", difficulty: "Easy", lat: 27.1751, lon: 78.0421, year: "1653" },
   { name: "Chernobyl Disaster", difficulty: "Medium", lat: 51.389, lon: 30.099, year: "1986" },
   { name: "Fall of Constantinople", difficulty: "Easy", lat: 41.0082, lon: 28.9784, year: "1453" },
+  { name: "French Revolution Begins (Paris)", difficulty: "Medium", lat: 48.8566, lon: 2.3522, year: "1789" },
   { name: "Russian October Revolution (Petrograd)", difficulty: "Hard", lat: 59.9311, lon: 30.3609, year: "1917" },
+  { name: "Independence of India (New Delhi)", difficulty: "Medium", lat: 28.6139, lon: 77.209, year: "1947" },
   { name: "Meiji Restoration (Tokyo)", difficulty: "Hard", lat: 35.6762, lon: 139.6503, year: "1868" },
+  { name: "Unification of Germany (Versailles)", difficulty: "Hard", lat: 48.8049, lon: 2.1204, year: "1871" },
   { name: "Moon Landing – Mission Control (Houston)", difficulty: "Medium", lat: 29.5522, lon: -95.097, year: "1969" },
   { name: "Great Fire of London", difficulty: "Medium", lat: 51.5074, lon: -0.1278, year: "1666" },
   { name: "Battle of Waterloo", difficulty: "Medium", lat: 50.6806, lon: 4.4125, year: "1815" },
@@ -149,7 +183,7 @@ const eventsData = [
   { name: "Rwandan Genocide (Kigali)", difficulty: "Hard", lat: -1.9579, lon: 30.1127, year: "1994" },
   { name: "Nelson Mandela Becomes President (Pretoria)", difficulty: "Medium", lat: -25.7479, lon: 28.2293, year: "1994" },
   { name: "Attack on Pearl Harbor (Oahu)", difficulty: "Medium", lat: 21.3649, lon: -157.9495, year: "1941" },
-  { name: "9/11 Attacks ", difficulty: "Medium", lat: 40.7115, lon: -74.0134, year: "2001" },
+  { name: "9/11 Attacks (New York City)", difficulty: "Medium", lat: 40.7115, lon: -74.0134, year: "2001" },
   { name: "Proclamation of the Republic of Turkey (Ankara)", difficulty: "Easy", lat: 39.9334, lon: 32.8597, year: "1923" },
   { name: "UN Founded (San Francisco Conference)", difficulty: "Hard", lat: 37.7749, lon: -122.4194, year: "1945" },
   { name: "Boston Tea Party (Boston)", difficulty: "Medium", lat: 42.3601, lon: -71.0589, year: "1773" },
@@ -174,7 +208,7 @@ function shuffleArray(arr) {
 
 let eventQueue = [];
 
-// ======== GAME STATE & DOM ========
+// ====================== GAME STATE & DOM ======================
 
 const eventNameEl = document.getElementById("eventName");
 const timerEl = document.getElementById("timer");
@@ -186,6 +220,17 @@ const startBtn = document.getElementById("startBtn");
 const skipBtn = document.getElementById("skipBtn");
 const timeBoostBtn = document.getElementById("timeBoostBtn");
 const pointsFloatEl = document.getElementById("pointsFloat");
+const mapTimerEl = document.getElementById("mapTimer");
+
+// Ses kontrol elemanları
+const soundToggleBtn = document.getElementById("soundToggle");
+const volumeSlider = document.getElementById("volumeSlider");
+
+// Süre seçimi
+const durationSelectEl = document.getElementById("durationSelect");
+const durationButtons = durationSelectEl
+  ? durationSelectEl.querySelectorAll(".duration-btn")
+  : [];
 
 eventNameEl.textContent = "Press Start to play";
 feedbackEl.textContent = "Ready to travel in time!";
@@ -194,7 +239,8 @@ startBtn.textContent = "Start";
 
 let score = 0;
 let lives = 3;
-let timeLeft = 90; // 90 saniye
+let timeLeft = 90;
+let initialDuration = 90;
 let currentEvent = null;
 let timerId = null;
 let gameRunning = false;
@@ -204,14 +250,49 @@ let canGuess = false;
 let skipAvailable = false;
 let timeBoostAvailable = false;
 
-// accuracy stats
+// accuracy
 let totalGuesses = 0;
 let totalDistanceKm = 0;
-let closeGuesses = 0; // örn. <= 1000 km
+let closeGuesses = 0;
+
+// ====================== SOUND UI WIRING ======================
+
+if (volumeSlider) {
+  masterVolume = Number(volumeSlider.value) / 100;
+}
+applyVolumeToAll();
+
+if (soundToggleBtn) {
+  soundToggleBtn.addEventListener("click", () => {
+    isMuted = !isMuted;
+    soundToggleBtn.textContent = isMuted ? "🔇" : "🔊";
+    playSound("click");
+    applyVolumeToAll();
+  });
+}
+
+if (volumeSlider) {
+  volumeSlider.addEventListener("input", () => {
+    masterVolume = Number(volumeSlider.value) / 100;
+    if (masterVolume <= 0) {
+      isMuted = true;
+      if (soundToggleBtn) soundToggleBtn.textContent = "🔇";
+    } else {
+      isMuted = false;
+      if (soundToggleBtn) soundToggleBtn.textContent = "🔊";
+    }
+    applyVolumeToAll();
+  });
+}
+
+// ====================== UI HELPERS ======================
 
 function updateStatsUI() {
   timerEl.textContent = timeLeft + "s";
-  document.getElementById("mapTimer").textContent = timeLeft + "s";
+  if (mapTimerEl) {
+    mapTimerEl.textContent = timeLeft + "s";
+  }
+
   scoreEl.textContent = score;
   livesEl.textContent = "❤️".repeat(lives) + "❌".repeat(3 - lives);
 
@@ -244,10 +325,15 @@ function animateLivesHit() {
 
 function showPointsFloat(points) {
   if (points <= 0) return;
+
   pointsFloatEl.textContent = "+" + points;
   pointsFloatEl.classList.remove("show");
   void pointsFloatEl.offsetWidth;
   pointsFloatEl.classList.add("show");
+
+  setTimeout(() => {
+    pointsFloatEl.classList.remove("show");
+  }, 700);
 }
 
 function setEvent(event) {
@@ -273,25 +359,22 @@ function getNextEvent() {
   return eventQueue.shift();
 }
 
-// ======== GAME FLOW ========
+// ====================== GAME FLOW ======================
 
-function startGame() {
-  // Power-up'lar reset
+function startGame(duration) {
   skipAvailable = true;
   timeBoostAvailable = true;
   skipBtn.disabled = false;
   timeBoostBtn.disabled = false;
 
-  // Accuracy reset
   totalGuesses = 0;
   totalDistanceKm = 0;
   closeGuesses = 0;
 
-  // State reset
   eventQueue = shuffleArray(eventsData);
   score = 0;
   lives = 3;
-  timeLeft = 90;
+  timeLeft = duration;
   gameRunning = true;
   canGuess = true;
 
@@ -306,6 +389,15 @@ function startGame() {
 
   startBtn.disabled = true;
   startBtn.textContent = "Playing...";
+
+  // BGM başlat
+  bgm.currentTime = 0;
+  last10Sound.pause();
+  last10Sound.currentTime = 0;
+  applyVolumeToAll();
+  if (!isMuted && masterVolume > 0) {
+    bgm.play().catch(() => {});
+  }
 }
 
 function endGame(message) {
@@ -322,7 +414,11 @@ function endGame(message) {
   skipBtn.disabled = true;
   timeBoostBtn.disabled = true;
 
-  // accuracy stats
+  bgm.pause();
+  bgm.currentTime = 0;
+  last10Sound.pause();
+  last10Sound.currentTime = 0;
+
   let avgError = totalGuesses ? (totalDistanceKm / totalGuesses) : 0;
   let accuracyPct = totalGuesses ? Math.round((closeGuesses / totalGuesses) * 100) : 0;
 
@@ -340,7 +436,7 @@ function endGame(message) {
   showPopup("Game Over", message + extraStats);
 }
 
-// ======== POWER-UPS ========
+// ====================== POWER-UPS ======================
 
 function useSkip() {
   if (!gameRunning || !canGuess || !skipAvailable) return;
@@ -370,7 +466,7 @@ function useTimeBoost() {
   updateStatsUI();
 }
 
-// ======== GUESS HANDLING ========
+// ====================== GUESS HANDLING ======================
 
 function handleGuess(latlng) {
   if (!gameRunning || !canGuess || !currentEvent) return;
@@ -383,7 +479,6 @@ function handleGuess(latlng) {
   const distanceMeters = map.distance(guessLatLng, trueLatLng);
   const distanceKm = distanceMeters / 1000;
 
-  // accuracy tracking
   totalGuesses++;
   totalDistanceKm += distanceKm;
   if (distanceKm <= 1000) {
@@ -413,7 +508,6 @@ function handleGuess(latlng) {
     pane: "markersPane"
   }).addTo(map);
 
-  // Daha smooth zoom
   map.flyTo(trueLatLng, 5, {
     animate: true,
     duration: 1.8,
@@ -433,6 +527,7 @@ function handleGuess(latlng) {
     points = 5;
   } else {
     lifeLost = true;
+    points = 0;
     lives--;
   }
 
@@ -453,8 +548,8 @@ function handleGuess(latlng) {
   let feedbackHtml = `
     <div style="margin-bottom:4px;"><strong>${currentEvent.name}</strong></div>
     True location: (${trueLatLng.lat.toFixed(1)}, ${trueLatLng.lng.toFixed(
-    1
-  )}) | 
+      1
+    )}) | 
     Diff: <strong>${distText}</strong> | 
     Points: <span style="color:#10b981; font-weight:bold;">+${points}</span>
   `;
@@ -481,29 +576,75 @@ function handleGuess(latlng) {
   }, 3000);
 }
 
-// ======== EVENT LISTENERS ========
+// ====================== EVENT LISTENERS ======================
 
-startBtn.addEventListener("click", () => {
-  // Her oyuna yeni timer kur
+function startWithDuration(selected) {
+  initialDuration = selected;
+
+  if (durationSelectEl) {
+    durationSelectEl.classList.add("hidden");
+  }
+
   if (timerId) clearInterval(timerId);
+  timeLeft = initialDuration;
+  updateStatsUI();
+
+  startGame(initialDuration);
+
   timerId = setInterval(() => {
     timeLeft--;
+
+    // Son 10 sn'de BGM -> last10 geçişi
+    if (timeLeft === 10) {
+      bgm.pause();
+      last10Sound.currentTime = 0;
+      applyVolumeToAll();
+      if (!isMuted && masterVolume > 0) {
+        last10Sound.play().catch(() => {});
+      }
+    }
+
     if (timeLeft <= 0) {
       timeLeft = 0;
+      last10Sound.pause();
       endGame("Time is up!");
     }
     updateStatsUI();
   }, 1000);
+}
 
-  startGame();
+startBtn.addEventListener("click", () => {
+  playSound("click");
+  if (gameRunning) return;
+  if (durationSelectEl) {
+    durationSelectEl.classList.remove("hidden");
+  } else {
+    startWithDuration(90);
+  }
 });
 
-skipBtn.addEventListener("click", useSkip);
-timeBoostBtn.addEventListener("click", useTimeBoost);
+durationButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    playSound("click");
+    const selected = parseInt(btn.dataset.duration, 10);
+    startWithDuration(selected);
+  });
+});
+
+skipBtn.addEventListener("click", () => {
+  playSound("click");
+  useSkip();
+});
+
+timeBoostBtn.addEventListener("click", () => {
+  playSound("click");
+  useTimeBoost();
+});
 
 updateStatsUI();
 
-// ===== POPUP SYSTEM =====
+// ====================== POPUP SYSTEM ======================
+
 const popup = document.getElementById("gameOverPopup");
 const popupTitle = document.getElementById("popupTitle");
 const popupMessage = document.getElementById("popupMessage");
@@ -516,5 +657,6 @@ function showPopup(title, message) {
 }
 
 popupCloseBtn.addEventListener("click", () => {
+  playSound("click");
   popup.classList.add("hidden");
 });

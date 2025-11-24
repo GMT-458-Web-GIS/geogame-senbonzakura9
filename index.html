@@ -16,6 +16,19 @@
 </head>
 <body>
 
+  <!-- SOUND CONTROL (top-right) -->
+  <div class="sound-control">
+    <button id="soundToggle" class="sound-btn" title="Toggle sound">🔊</button>
+    <input
+      id="volumeSlider"
+      class="volume-slider"
+      type="range"
+      min="0"
+      max="100"
+      value="60"
+    />
+  </div>
+
   <!-- Modern Title -->
   <h1 class="modern-title">Time Traveler GeoGame</h1>
 
@@ -63,18 +76,25 @@
         </div>
       </div>
 
-      <!-- Controls + Power-ups -->
+      <!-- Controls -->
       <div class="panel">
         <div class="panel-title">Controls</div>
         <div class="buttons">
           <button id="startBtn">Start</button>
         </div>
 
-        <div class="powerups-title">Power-ups (1 use per game)</div>
-        <div class="powerups">
-          <button id="skipBtn" class="powerup-btn" disabled>Skip Event</button>
-          <button id="timeBoostBtn" class="powerup-btn" disabled>+10s Time</button>
+        <!-- Duration select -->
+        <div id="durationSelect" class="duration-select hidden">
+          <button class="duration-btn" data-duration="60">60 seconds</button>
+          <button class="duration-btn" data-duration="90">90 seconds</button>
         </div>
+      </div>
+
+      <!-- Power-ups -->
+      <div class="powerups-title">Power-ups (1 use per game)</div>
+      <div class="powerups">
+        <button id="skipBtn" class="powerup-btn" disabled>Skip Event</button>
+        <button id="timeBoostBtn" class="powerup-btn" disabled>+10s Time</button>
       </div>
 
       <!-- Scoring Rules -->
@@ -115,7 +135,6 @@
 
     </div> <!-- end sidebar -->
   </div> <!-- end layout -->
-
 
   <!-- GAME OVER POPUP -->
   <div id="gameOverPopup" class="popup hidden">
