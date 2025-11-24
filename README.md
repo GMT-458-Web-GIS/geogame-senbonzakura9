@@ -1,3 +1,4 @@
+##https://gmt-458-web-gis.github.io/geogame-senbonzakura9/
 Time Traveler GeoGame
 1. Game Concept
 Time Traveler GeoGame is an interactive, time-limited geography game where the player is shown a historical event, and must click the correct geographic location on the map. The aim is to score as many points as possible within one minute.
