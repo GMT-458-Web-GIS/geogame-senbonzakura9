@@ -1,5 +1,5 @@
 ##https://gmt-458-web-gis.github.io/geogame-senbonzakura9/
-
+This is the first readme file of the game it is based on the first thoughts about the game for further infomations and innovations please check read me 2.
 
 Time Traveler GeoGame
 1. Game Concept
