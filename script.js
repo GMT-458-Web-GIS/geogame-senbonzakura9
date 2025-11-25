@@ -193,7 +193,8 @@ const eventsData = [
   { name: "Black Death Reaches Europe (Sicily)", difficulty: "Hard", lat: 37.5999, lon: 14.0154, year: "1347" },
   { name: "Mongol Siege of Baghdad", difficulty: "Hard", lat: 33.3152, lon: 44.3661, year: "1258" },
   { name: "Nelson Mandela Released (Cape Town)", difficulty: "Easy", lat: -33.9249, lon: 18.4241, year: "1990" },
-  { name: "Great Chicago Fire", difficulty: "Medium", lat: 41.8781, lon: -87.6298, year: "1871" }
+  { name: "Great Chicago Fire", difficulty: "Medium", lat: 41.8781, lon: -87.6298, year: "1871" },
+  { name: "Apollo 13 Splashdown (South Pacific)", difficulty: "Hard", lat: -21.6, lon: -165.0, year: "1970" }
 ];
 
 function shuffleArray(arr) {
@@ -659,4 +660,3 @@ popupCloseBtn.addEventListener("click", () => {
   playSound("click");
   popup.classList.add("hidden");
 });
-
