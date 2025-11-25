@@ -10,10 +10,11 @@
 
 body {
   font-family: "Inter", system-ui, sans-serif;
-  background: #e5e7eb;
+  background: linear-gradient(120deg, #dbeafe, #eff6ff);
   color: #111827;
   overflow-x: hidden;
 }
+
 
 /* ---- MODERN TITLE ---- */
 .modern-title {
@@ -168,7 +169,7 @@ body {
 
 /* panel */
 .panel {
-  background: white;
+  background: #eef6ff;
   border-radius: 16px;
   padding: 14px 18px;
   border: 1px solid #e5e7eb;
