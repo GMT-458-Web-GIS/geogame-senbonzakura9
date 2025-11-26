@@ -1,5 +1,5 @@
 **https://gmt-458-web-gis.github.io/geogame-senbonzakura9/**
-This is the first readme file of the game. It is an asnwer for "how should my game be" question for further informations and innovations please check read me 2.
+This is the first readme file of the game. It is an answer for "how should my game be" question, for further informations and innovations please check read me 2.
 Please play the game with music on and enjoy.
 
 Time Traveler GeoGame
