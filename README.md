@@ -1,4 +1,4 @@
-**https://gmt-458-web-gis.github.io/geogame-senbonzakura9/**
+**https://gmt-458-web-gis.github.io/geogame-senbonzakura9/** Emirhan Bıçkıcı 2210674004
 This is the first readme file of the game. It is an answer for "how should my game be" question, for further informations and innovations please check read me 2.
 
 
